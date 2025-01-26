@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mariadb:10.6.4-focal
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - lwct-db:/var/lib/mysql
+    restart: always
+    # environment:
+      # - MYSQL_ROOT_PASSWORD=XXX
+      # - MYSQL_DATABASE=lwct
+      # - MYSQL_USER=XXX
+      # - MYSQL_PASSWORD=XXX
+    expose:
+      - 3306
+      - 33060
+    ports:
+      - 33060:3306
+  wordpress:
+    image: wordpress:latest
+    volumes:
+      - lwct-wp:/var/www/html
+    ports:
+      - 8000:80
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=lwctuser
+      - WORDPRESS_DB_PASSWORD=lwctpass
+      - WORDPRESS_DB_NAME=lwct
+volumes:
+    lwct-db:
+        external: true
+    lwct-wp:
+        external: true

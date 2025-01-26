@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# install Docker WordPress and MariaDB containers for LWCT
+
+# docker image pull debian:latest
+
+# docker image pull mariadb:10.6.4-focal
+# docker image pull wordpress:latest
+
+docker compose down -v
+
+docker volume rm lwct-wp
+
+docker volume create lwct-wp
+docker run -v lwct-wp:/var/junk -v .:/var/lwct-tmp -t --rm debian bash -c "cd /var/junk && tar -xvf /var/lwct-tmp/lwct-wp.tar"
+
+docker volume rm lwct-db
+
+docker volume create lwct-db
+docker run -v lwct-db:/var/junk -v .:/var/lwct-tmp -t --rm debian bash -c "cd /var/junk && tar -xvf /var/lwct-tmp/lwct-db.tar"
+
+docker compose up -d
+
+# docker compose exec -d wordpress bash -c "apt install php8.2-gd"
